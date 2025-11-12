@@ -20,6 +20,7 @@ def main():
     # Generate events accoerding to loaded data
     logs = generate_events(eventsList, statsList, int(days))
 
-    print(json.dumps(logs, indent=4))
+    # Uncomment to debug generated logs
+    #print(json.dumps(logs, indent=4))
 
 main()
