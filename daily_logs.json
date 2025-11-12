@@ -1,0 +1,42 @@
+[
+    {
+        "day": 1,
+        "Logins": 3,
+        "Time online": 134.83,
+        "Emails sent": 9,
+        "Emails opened": 17,
+        "Emails deleted": 9
+    },
+    {
+        "day": 2,
+        "Logins": 4,
+        "Time online": 188.55,
+        "Emails sent": 8,
+        "Emails opened": 13,
+        "Emails deleted": 9
+    },
+    {
+        "day": 3,
+        "Logins": 2,
+        "Time online": 163.99,
+        "Emails sent": 10,
+        "Emails opened": 9,
+        "Emails deleted": 7
+    },
+    {
+        "day": 4,
+        "Logins": 3,
+        "Time online": 170.47,
+        "Emails sent": 13,
+        "Emails opened": 19,
+        "Emails deleted": 8
+    },
+    {
+        "day": 5,
+        "Logins": 6,
+        "Time online": 167.79,
+        "Emails sent": 8,
+        "Emails opened": 10,
+        "Emails deleted": 11
+    }
+]
