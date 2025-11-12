@@ -1,6 +1,8 @@
 import sys
+import time
 from helper import *
 from activity_engine import generate_events
+from analysis_engine import analyse_logs
 import json
 
 def main():
@@ -13,14 +15,22 @@ def main():
     eventsList = load_events(eventsFile)
     statsList = load_stats(statsFile)
 
-    # Uncomment to debug loaded data
-    #print(json.dumps(eventsList, indent=4))
-    #print(json.dumps(statsList, indent=4))
+    print("Loading event and stats data...")
+    time.sleep(2) #lmao
+    print(json.dumps(eventsList, indent=4))
+    print(json.dumps(statsList, indent=4))
 
     # Generate events accoerding to loaded data
+    print(f"Generating logs for {days} days...")
+    input ("Press Enter to continue...")
     logs = generate_events(eventsList, statsList, int(days))
+    print(json.dumps(logs, indent=4))
 
-    # Uncomment to debug generated logs
-    #print(json.dumps(logs, indent=4))
+    print("\nAnalyzing generated logs to set baselines...")
+    input ("Press Enter to continue...")
+    # Analyse generated logs to set baselines
+    analysis = analyse_logs(logs, eventsList)
+    print(json.dumps(analysis, indent=4))
+    
 
 main()
