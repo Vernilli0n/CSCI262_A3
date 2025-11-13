@@ -2,7 +2,7 @@ import numpy as np
 import json
 
 
-def analyse_logs(logs, events):
+def analyse_logs(logs, events, type="baseline"):
     analysis = {}
     total_days = len(logs)
     count = {event: 0 for event in events.keys()}
@@ -20,7 +20,7 @@ def analyse_logs(logs, events):
             "standard_deviation": round(np.std(standard_deviation[event]), 2)  # Placeholder for standard deviation calculation
         }
 
-    with open('analysis.json', 'w') as f:
+    with open(f'{type}_analysis.json', 'w') as f:
         json.dump(analysis, f, indent=4)
-        print("Analysis saved to analysis.json")
+        print(f"Analysis saved to {type}_analysis.json")
     return analysis
