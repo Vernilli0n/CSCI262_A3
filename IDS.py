@@ -52,8 +52,6 @@ def main():
     # Check for anomalies using alert engine
     print("\nAnalyzing new logs for anomalies...")
     input ("Press Enter to continue...")
-    newAnalysis = analyse_logs(newLogs, eventsList, type="new")
-    print(json.dumps(newAnalysis, indent=4))
     alert_engine(newLogs, eventsList, baseline, anomaly_threshold)
     print ("\nAlerts saved to 'alerts.json'.")
     print("\nProcess completed.")
