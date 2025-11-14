@@ -10,7 +10,7 @@ def load_events(file_path):
                     'type': parts[1],
                     'min': int(parts[2]),
                     'maxi': int(parts[3]) if parts[3] else None,
-                    'weight': float(parts[4])
+                    'weight': abs(int(parts[4])) if parts[4] else print("No weight specified, defaulting to 1") or 1,
                 }
     return events_list
 
@@ -26,3 +26,10 @@ def load_stats(file_path):
                     'sd': float(parts[2])
                 }
     return stats_list
+
+def calculate_anomaly_threshold(events):
+    """Calculate anomaly threshold based on events weights."""
+    threshold = 0
+    for event, details in events.items():
+        threshold += details['weight']
+    return threshold * 2

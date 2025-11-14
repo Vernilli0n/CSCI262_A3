@@ -3,6 +3,7 @@ import time
 from helper import *
 from activity_engine import generate_events
 from analysis_engine import analyse_logs
+from alert_engine import alert_engine
 import json
 
 def main():
@@ -14,9 +15,10 @@ def main():
     #load data from files
     eventsList = load_events(eventsFile)
     statsList = load_stats(statsFile)
+    #calculate anomaly threshold
+    anomaly_threshold = calculate_anomaly_threshold(eventsList)
 
     print("Loading event and stats data...")
-    time.sleep(2) #lmao
     print(json.dumps(eventsList, indent=4))
     print(json.dumps(statsList, indent=4))
 
@@ -34,8 +36,8 @@ def main():
 
     print("\n\nProcess completed. Generated logs saved to 'daily_logs_initial.json' and analysis saved to 'baseline_analysis.json'.")
     statsFile = input ("Enter the next stats file to load:\t")
+    statsFile = statsFile if statsFile else "Stats2.txt"
     print(f"Loading stats from {statsFile}...")
-    time.sleep(2) #lmao
     newStatsList = load_stats(statsFile)
     print("Loaded new stats:")
     print(json.dumps(newStatsList, indent=4))
@@ -47,6 +49,14 @@ def main():
     newLogs = generate_events(eventsList, newStatsList, int(days), "new")
     print(json.dumps(newLogs, indent=4))
 
+    # Check for anomalies using alert engine
+    print("\nAnalyzing new logs for anomalies...")
+    input ("Press Enter to continue...")
+    newAnalysis = analyse_logs(newLogs, eventsList, type="new")
+    print(json.dumps(newAnalysis, indent=4))
+    alert_engine(newLogs, eventsList, baseline, anomaly_threshold)
+    print ("\nAlerts saved to 'alerts.json'.")
+    print("\nProcess completed.")
 
 
 main()
