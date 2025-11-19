@@ -7,8 +7,9 @@ from analysis_engine import analyse_logs
 from alert_engine import alert_engine
 import json
 
+#Pick a file from argv if valid, else use default if present, otherwise prompt
 def _choose_file_from_args(arg_index: int, default_name: str, prompt: str) -> str:
-    """Pick a file from argv if valid, else use default if present, otherwise prompt."""
+    """."""
     if len(sys.argv) > arg_index:
         candidate = sys.argv[arg_index]
         if os.path.isfile(candidate):

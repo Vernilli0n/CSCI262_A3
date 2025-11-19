@@ -1,8 +1,7 @@
 from analysis_engine import analyse_logs
 import json
 
-def alert_engine(logs, eventsList, baseline, anomoly_threshold):
-    """Check new logs against baseline and trigger alerts if anomalies are detected."""
+def alert_engine(logs, eventsList, baseline, anomoly_threshold): #Checks new logs against baseline and triggers alerts if anomalies are detected
     for log in logs:
         total_anomaly_counter = 0
         for event, details in eventsList.items():
@@ -17,9 +16,9 @@ def alert_engine(logs, eventsList, baseline, anomoly_threshold):
         
         # Check total anomaly counter against threshold
         if total_anomaly_counter > anomoly_threshold:
-            log["status"] = "❌" * 10
+            log["status"] = "!!!!!!!!!!FLAGGED!!!!!!!!!!"
         else:
-            log["status"] = "✅" * 10
+            log["status"] = "OK"
             
         log["anomaly_score"] = f"{round(total_anomaly_counter, 2)} / {anomoly_threshold}"
     

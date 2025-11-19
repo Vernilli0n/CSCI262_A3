@@ -9,8 +9,7 @@ def ask_for_existing_file(prompt_text: str = "Enter file path: ") -> str:
             return p
         print(f"'{p}' does not exist. Please enter a valid file.")
 
-def ask_for_positive_int(prompt: str = "Enter number of days to generate logs for: ",
-                        min_value: int = 1, allow_zero: bool = False) -> int:
+def ask_for_positive_int(prompt: str = "Enter number of days to generate logs for: ", min_value: int = 1, allow_zero: bool = False) -> int:
     while True:
         s = input(prompt).strip()
         try:
