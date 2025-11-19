@@ -6,7 +6,6 @@ from activity_engine import generate_events
 from analysis_engine import analyse_logs
 from alert_engine import alert_engine
 import json
-from helper import ask_for_positive_int
 
 def _choose_file_from_args(arg_index: int, default_name: str, prompt: str) -> str:
     """Pick a file from argv if valid, else use default if present, otherwise prompt."""
@@ -59,31 +58,49 @@ def main():
     print(json.dumps(baseline, indent=4))
 
     print("\n\nProcess completed. Generated logs saved to 'daily_logs_initial.json' and analysis saved to 'baseline_analysis.json'.")
-    # next stats round: let user press Enter to use Stats2.txt or enter a different existing file
-    next_stats = input("Enter the next stats file to load (press Enter to use 'Stats2.txt'):\t").strip()
-    if not next_stats:
-        next_stats = "Stats2.txt" if os.path.isfile("Stats2.txt") else ask_for_existing_file("Enter the next stats file to load: ")
-    elif not os.path.isfile(next_stats):
-        print(f"'{next_stats}' does not exist.")
-        next_stats = ask_for_existing_file("Enter the next stats file to load: ")
-    print(f"Loading stats from {next_stats}...")
-    newStatsList = load_stats(next_stats)
-    print("Loaded new stats:")
-    print(json.dumps(newStatsList, indent=4))
+    
+    # Loop: allow user to load multiple stats files and specify days repeatedly
+    analysis_round = 1
+    while True:
+        print(f"\n Analysis Round {analysis_round}")
+        
+        # Prompt user: load next stats file or quit
+        user_choice = input("\nOptions:\n  [stat] Load another stats file and analyze\n  [quit] Quit\n\nEnter your choice: ").strip().lower()
+        
+        if user_choice == 'quit':
+            print("Exiting. Thank you for using the IDS system.")
+            break
+        elif user_choice != 'stat':
+            print("Invalid choice. Please enter 'stat' or 'quit'.")
+            continue
+        
+        # next stats round: let user press Enter to use Stats2.txt or enter a different existing file
+        next_stats = input("Enter the next stats file to load (press Enter to use 'Stats2.txt'):\t").strip()
+        if not next_stats:
+            next_stats = "Stats2.txt" if os.path.isfile("Stats2.txt") else ask_for_existing_file("Enter the next stats file to load: ")
+        elif not os.path.isfile(next_stats):
+            print(f"'{next_stats}' does not exist.")
+            next_stats = ask_for_existing_file("Enter the next stats file to load: ")
+        print(f"Loading stats from {next_stats}...")
+        newStatsList = load_stats(next_stats)
+        print("Loaded new stats:")
+        print(json.dumps(newStatsList, indent=4))
 
-    # Generate new logs based on new stats
-    days = ask_for_positive_int("Enter number of days to generate logs for: ")
-    print(f"Generating logs for {days} days with new stats...")
-    input("Press Enter to continue...")
-    newLogs = generate_events(eventsList, newStatsList, days, "new")
-    print(json.dumps(newLogs, indent=4))
+        # Generate new logs based on new stats
+        days = ask_for_positive_int("Enter number of days to generate logs for: ")
+        print(f"Generating logs for {days} days with new stats...")
+        input("Press Enter to continue...")
+        newLogs = generate_events(eventsList, newStatsList, days, "new")
+        print(json.dumps(newLogs, indent=4))
 
-    # Check for anomalies using alert engine
-    print("\nAnalyzing new logs for anomalies...")
-    input("Press Enter to continue...")
-    alert_engine(newLogs, eventsList, baseline, anomaly_threshold)
-    print ("\nAlerts saved to 'alerts.json'.")
-    print("\nProcess completed.")
+        # Check for anomalies using alert engine
+        print("\nAnalyzing new logs for anomalies...")
+        input("Press Enter to continue...")
+        alert_engine(newLogs, eventsList, baseline, anomaly_threshold)
+        print ("\nAlerts saved to 'alerts.json'.")
+        print(f"\nRound {analysis_round} completed.")
+        
+        analysis_round += 1
 
 if __name__ == "__main__":
     main()
