@@ -35,7 +35,7 @@ def _to_int(s: str, default: Optional[int] = None, abs_val: bool = False) -> Opt
 # validates file path else prompts the user for a valid one
 def _ensure_path(file_path: Optional[str], prompt: str) -> str:
     if not file_path or not os.path.isfile(file_path):
-        logging.warning("File not found or not provided: %s", file_path)
+        logging.warning("File not found: %s", file_path)
         return ask_for_existing_file(prompt)
     return file_path
 

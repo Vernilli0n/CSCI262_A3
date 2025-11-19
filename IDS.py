@@ -72,7 +72,7 @@ def main():
             continue
         
         # next round of stats input that allows user to press Enter to use Stats2.txt or enter a different existing file
-        next_stats = input("Enter the next stats file to load (press Enter to use 'Stats2.txt'):\t").strip()
+        next_stats = input("Enter the next stats file to load or press Enter to use 'Stats2.txt':\t").strip()
         if not next_stats:
             next_stats = "Stats2.txt" if os.path.isfile("Stats2.txt") else ask_for_existing_file("Enter the next stats file to load: ")
         elif not os.path.isfile(next_stats):
