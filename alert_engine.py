@@ -1,7 +1,8 @@
 from analysis_engine import analyse_logs
 import json
 
-def alert_engine(logs, eventsList, baseline, anomoly_threshold): #Checks new logs against baseline and triggers alerts if anomalies are detected
+# checks new logs against baseline and triggers alerts if anomalies are detected
+def alert_engine(logs, eventsList, baseline, anomoly_threshold):
     for log in logs:
         total_anomaly_counter = 0
         for event, details in eventsList.items():
@@ -14,7 +15,7 @@ def alert_engine(logs, eventsList, baseline, anomoly_threshold): #Checks new log
                 weighted_deviation = num_standard_deviations * details['weight']
                 total_anomaly_counter += weighted_deviation
         
-        # Check total anomaly counter against threshold
+        # checks total anomaly counter against threshold
         if total_anomaly_counter > anomoly_threshold:
             log["status"] = "!!!!!!!!!!FLAGGED!!!!!!!!!!"
         else:

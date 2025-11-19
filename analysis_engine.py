@@ -1,7 +1,7 @@
 import numpy as np
 import json
 
-
+# analyse logs to show total, mean and standard deviation which would be then outputted to a file
 def analyse_logs(logs, events, type="baseline"):
     analysis = {}
     total_days = len(logs)
@@ -17,7 +17,7 @@ def analyse_logs(logs, events, type="baseline"):
         analysis[event] = {
             "total": count[event],
             "mean": round(count[event] / total_days, 2),
-            "standard_deviation": round(np.std(standard_deviation[event]), 2)  # Placeholder for standard deviation calculation
+            "standard_deviation": round(np.std(standard_deviation[event]), 2)  
         }
 
     with open(f'{type}_analysis.json', 'w') as f:

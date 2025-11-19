@@ -2,6 +2,7 @@ import os
 import logging
 from typing import Dict, Any, Optional
 
+# prompts user till valid file path is inputted
 def ask_for_existing_file(prompt_text: str = "Enter file path: ") -> str:
     while True:
         p = input(prompt_text).strip()
@@ -9,6 +10,7 @@ def ask_for_existing_file(prompt_text: str = "Enter file path: ") -> str:
             return p
         print(f"'{p}' does not exist. Please enter a valid file.")
 
+# prompts user till valid num of days is inputted
 def ask_for_positive_int(prompt: str = "Enter number of days to generate logs for: ", min_value: int = 1, allow_zero: bool = False) -> int:
     while True:
         s = input(prompt).strip()
@@ -22,6 +24,7 @@ def ask_for_positive_int(prompt: str = "Enter number of days to generate logs fo
             continue
         return v
 
+# converts string to int 
 def _to_int(s: str, default: Optional[int] = None, abs_val: bool = False) -> Optional[int]:
     try:
         v = int(s) if s != "" else default
@@ -29,12 +32,14 @@ def _to_int(s: str, default: Optional[int] = None, abs_val: bool = False) -> Opt
     except (ValueError, TypeError):
         return default
 
+# validates file path else prompts the user for a valid one
 def _ensure_path(file_path: Optional[str], prompt: str) -> str:
     if not file_path or not os.path.isfile(file_path):
         logging.warning("File not found or not provided: %s", file_path)
         return ask_for_existing_file(prompt)
     return file_path
 
+# reads the events file and returns a dictionary of type, minimum, maximum and weight for each event
 def load_events(file_path: str) -> Dict[str, Dict[str, Any]]:
     events: Dict[str, Dict[str, Any]] = {}
     path = _ensure_path(file_path, "Enter events file path: ")
@@ -62,6 +67,7 @@ def load_events(file_path: str) -> Dict[str, Dict[str, Any]]:
         logging.error("Failed to read events file %s: %s", path, e)
     return events
 
+# reads the stats file and returns a dictionary of mean and standard deviation for each event
 def load_stats(file_path: str) -> Dict[str, Dict[str, Any]]:
     stats: Dict[str, Dict[str, Any]] = {}
     path = _ensure_path(file_path, "Enter the next stats file to load: ")
@@ -90,6 +96,7 @@ def load_stats(file_path: str) -> Dict[str, Dict[str, Any]]:
         logging.error("Failed to read stats file %s: %s", path, e)
     return stats
 
+# calculates the anomaly threshold based on the weight of the events
 def calculate_anomaly_threshold(events: Dict[str, Dict[str, Any]]) -> float:
     if not isinstance(events, dict):
         logging.error("calculate_anomaly_threshold expects a dict, got %s", type(events).__name__)

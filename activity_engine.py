@@ -1,6 +1,7 @@
 import random
 import json
 
+# generates events based on user's specificied amount of days
 def generate_events(events, stats, days, type, multiplier=1 ):
     logs = []
     

@@ -7,9 +7,8 @@ from analysis_engine import analyse_logs
 from alert_engine import alert_engine
 import json
 
-#Pick a file from argv if valid, else use default if present, otherwise prompt
+# selects a file form terminal, default or prompts user
 def _choose_file_from_args(arg_index: int, default_name: str, prompt: str) -> str:
-    """."""
     if len(sys.argv) > arg_index:
         candidate = sys.argv[arg_index]
         if os.path.isfile(candidate):
@@ -21,11 +20,11 @@ def _choose_file_from_args(arg_index: int, default_name: str, prompt: str) -> st
     return ask_for_existing_file(prompt)
 
 def main():
-    # decide files/days from argv or prompt/ defaults
+    # decides files/days from argv or prompt/ defaults
     eventsFile = _choose_file_from_args(1, "Events.txt", "Enter events file to load: ")
     statsFile = _choose_file_from_args(2, "Stats.txt", "Enter stats file to load: ")
 
-    # determine days: prefer argv value if valid integer, otherwise prompt
+    # determines days by preferring argv value if valid integer, otherwise prompt
     days = None
     if len(sys.argv) > 3:
         try:
@@ -38,7 +37,7 @@ def main():
     else:
         days = ask_for_positive_int("Enter number of days to generate logs for: ")
 
-    # load data from files
+    # loads the data from files
     eventsList = load_events(eventsFile)
     statsList = load_stats(statsFile)
     anomaly_threshold = calculate_anomaly_threshold(eventsList)
@@ -47,7 +46,7 @@ def main():
     print(json.dumps(eventsList, indent=4))
     print(json.dumps(statsList, indent=4))
 
-    # Generate events according to loaded data
+    # generates events according to loaded data
     print(f"Generating logs for {days} days...")
     input("Press Enter to continue...")
     logs = generate_events(eventsList, statsList, days, "initial")
@@ -58,24 +57,21 @@ def main():
     baseline = analyse_logs(logs, eventsList)
     print(json.dumps(baseline, indent=4))
 
-    print("\n\nProcess completed. Generated logs saved to 'daily_logs_initial.json' and analysis saved to 'baseline_analysis.json'.")
+    print("\n\nProcess completed, the generated logs are saved to 'daily_logs_initial.json' and analysis saved to 'baseline_analysis.json'.")
     
-    # Loop: allow user to load multiple stats files and specify days repeatedly
+    # loop implementated to allow user to load multiple stats files and specify days repeatedly
     analysis_round = 1
     while True:
         print(f"\n Analysis Round {analysis_round}")
-        
-        # Prompt user: load next stats file or quit
         user_choice = input("\nOptions:\n  [stat] Load another stats file and analyze\n  [quit] Quit\n\nEnter your choice: ").strip().lower()
-        
         if user_choice == 'quit':
-            print("Exiting. Thank you for using the IDS system.")
+            print("End of analysis, exiting the program.")
             break
         elif user_choice != 'stat':
             print("Invalid choice. Please enter 'stat' or 'quit'.")
             continue
         
-        # next stats round: let user press Enter to use Stats2.txt or enter a different existing file
+        # next round of stats input that allows user to press Enter to use Stats2.txt or enter a different existing file
         next_stats = input("Enter the next stats file to load (press Enter to use 'Stats2.txt'):\t").strip()
         if not next_stats:
             next_stats = "Stats2.txt" if os.path.isfile("Stats2.txt") else ask_for_existing_file("Enter the next stats file to load: ")
@@ -87,14 +83,14 @@ def main():
         print("Loaded new stats:")
         print(json.dumps(newStatsList, indent=4))
 
-        # Generate new logs based on new stats
+        # generates new logs based on new stats
         days = ask_for_positive_int("Enter number of days to generate logs for: ")
         print(f"Generating logs for {days} days with new stats...")
         input("Press Enter to continue...")
         newLogs = generate_events(eventsList, newStatsList, days, "new")
         print(json.dumps(newLogs, indent=4))
 
-        # Check for anomalies using alert engine
+        # checks for anomalies using alert engine
         print("\nAnalyzing new logs for anomalies...")
         input("Press Enter to continue...")
         alert_engine(newLogs, eventsList, baseline, anomaly_threshold)
