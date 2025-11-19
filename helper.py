@@ -2,8 +2,6 @@ import os
 import logging
 from typing import Dict, Any, Optional
 
-logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
-
 def ask_for_existing_file(prompt_text: str = "Enter file path: ") -> str:
     while True:
         p = input(prompt_text).strip()
