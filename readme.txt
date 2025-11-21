@@ -27,9 +27,22 @@ Files Included:
 
 
 To run:
-
 	python IDS.py Events.txt Stats.txt <Days>
 
-Example:
-	
+	#Example:
 	python IDS.py Events.txt Stats.txt 5
+	Press <Enter> to load the full logs
+	
+	#After the Analysis there will be 2 choices: stat or quit.
+	#Example for stat:
+	Type stat
+	Press <Enter>
+	"Enter days": 6
+	Press <Enter> to load the full logs
+
+	#Example for quit:
+	Type quit
+	Program ends
+
+
+
